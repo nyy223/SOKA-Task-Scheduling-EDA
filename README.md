@@ -60,8 +60,6 @@ pip install -r requirements.txt
 --- 
 # **Analisis Hasil Algoritma Task Scheduling**
 
-Berikut adalah ringkasan analisis dari hasil eksekusi algoritma penjadwalan tugas yang kamu jalankan. Penjelasan dibuat lebih jelas dan mudah dibaca.
-
 ## **1. Ringkasan Metrik Performa Utama**
 
 - **Total Tugas Selesai: 20**
