@@ -82,3 +82,45 @@ pip install -r requirements.txt
 
 - **Resource Utilization (CPU): 67.4938%**
   - Pemanfaatan CPU berada di sekitar 67%. Masih ada ruang 30%+ yang tidak terpakai, kemungkinan akibat distribusi task yang tidak merata.
+
+# **Analisis Berdasarkan Data eda_results.csv**
+
+## **1. Distribusi Beban Kerja (Workload Distribution)**
+Jumlah tugas yang dikerjakan setiap Virtual Machine (VM):
+
+* **VM1** → 3 tugas
+  (`task-5-1`, `task-3-5`, `task-4-6`)
+
+* **VM2** → 2 tugas
+  (`task-8-15`, `task-6-18`)
+
+* **VM3** → 8 tugas
+  (`task-6-0`, `task-8-2`, `task-2-3`, `task-4-7`,
+  `task-1-11`, `task-9-13`, `task-1-14`, `task-2-16`)
+
+* **VM4** → 7 tugas
+  (`task-10-4`, `task-7-8`, `task-3-9`, `task-9-10`,
+  `task-7-12`, `task-5-17`, `task-10-19`)
+
+### **Kesimpulan Distribusi**
+* VM3 dan VM4 menangani **15 dari 20 task** → 75% beban kerja.
+* VM2 adalah yang paling sedikit bekerja (hanya 2 task).
+* Algoritma cenderung memilih VM3 dan VM4, sehingga beban tidak merata.
+
+## **2. Analisis Queue & Wait Time**
+Data start_time dan wait_time menunjukkan antrean yang panjang pada VM tertentu.
+
+### **Contoh pada VM3**
+* `task-8-2` mulai paling awal (sekitar 0.002 detik).
+* `task-1-11` Bisa mulai di detik **6.901**, dikarenakan harus menunggu task sebelumnya selesai.
+* Tugas-tugas selanjutnya di VM3 juga mengalami antrian panjang.
+
+### **Kesimpulan Antrean**
+Karena VM3 dan VM4 terlalu penuh, antrian di dua VM ini sangat panjang, sementara VM2 sering idle dan tidak dimanfaatkan optimal.
+
+## **3. Analisis Makespan (Waktu Total)**
+* Tugas yang selesai paling akhir adalah **task-5-17** di VM4.
+* Finishing time tugas ini adalah **25.1269 detik**.
+* Jadi Makespan akhir sistem adalah sekitar **25.13 detik**.
+Makespan ini bisa lebih rendah jika sebagian tugas di VM3/VM4 dipindahkan ke VM2 yang lebih kosong.
+
