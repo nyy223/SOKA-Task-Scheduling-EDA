@@ -56,10 +56,8 @@ pip install -r requirements.txt
 <img width="634" height="407" alt="Screenshot 2025-11-17 at 21 57 14" src="https://github.com/user-attachments/assets/cca143dc-c6da-40fd-89e5-eab1e764d069" />
 
 <img width="366" height="166" alt="Screenshot 2025-11-17 at 21 02 51" src="https://github.com/user-attachments/assets/41c5ea3c-6e8f-4d14-bc48-ac634502d1e2" />
-Siap, Aisyah! Ini aku rapihin penulisannya biar **rapih, clean, dan gampang kamu copy ke GitHub** (markdown-friendly).
 
----
-
+--- 
 # **Analisis Hasil Eksekusi Algoritma Penjadwalan Tugas**
 
 Berikut adalah ringkasan analisis dari hasil eksekusi algoritma penjadwalan tugas yang kamu jalankan. Penjelasan dibuat lebih jelas dan mudah dibaca.
