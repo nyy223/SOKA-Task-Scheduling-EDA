@@ -66,23 +66,23 @@ Berikut adalah ringkasan analisis dari hasil eksekusi algoritma penjadwalan tuga
 
 ## **1. Ringkasan Metrik Performa Utama**
 
-- ### **Total Tugas Selesai: 20**
+- **Total Tugas Selesai: 20**
 Algoritma berhasil menyelesaikan seluruh tugas tanpa ada yang gagal. Ini menunjukkan sistem berjalan dengan stabil.
 
-- ### **Makespan (Waktu Total): 25.1280 detik**
+- **Makespan (Waktu Total): 25.1280 detik**
 Makespan adalah waktu dari tugas pertama mulai hingga tugas terakhir selesai. Nilai ini menjadi acuan utama efisiensi algoritma—semakin kecil semakin baik.
 
-- ### **Throughput: 0.7959 tugas/detik**
+- **Throughput: 0.7959 tugas/detik**
 Rata-rata sistem menyelesaikan hampir 0.8 tugas per detik. Nilai ini dapat meningkat jika distribusi beban kerja diperbaiki.
 
-- ### **Total CPU Time: 254.3979 detik**
+- **Total CPU Time: 254.3979 detik**
 Merupakan akumulasi waktu kerja seluruh CPU dari semua VM. Karena bekerja paralel, angka ini lebih besar dari Makespan.
 
-- ### **Total Wait Time: 66.3394 detik**
+- **Total Wait Time: 66.3394 detik**
 Total waktu tunggu seluruh tugas sebelum dieksekusi. Angka ini menunjukkan adanya antrian yang cukup besar di beberapa VM.
 
-- ### **Imbalance Degree: 1.5322**
+- **Imbalance Degree: 1.5322**
 Menunjukkan tingkat ketidakmerataan beban kerja antar VM. Semakin dekat ke 0 semakin seimbang. Nilai 1.53 menunjukkan ketidakseimbangan yang signifikan.
 
-### **Resource Utilization (CPU): 67.4938%**
+- **Resource Utilization (CPU): 67.4938%**
 Pemanfaatan CPU berada di sekitar 67%. Masih ada ruang 30%+ yang tidak terpakai, kemungkinan akibat distribusi task yang tidak merata.
