@@ -124,3 +124,12 @@ Karena VM3 dan VM4 terlalu penuh, antrian di dua VM ini sangat panjang, sementar
 * Jadi Makespan akhir sistem adalah sekitar **25.13 detik**.
 Makespan ini bisa lebih rendah jika sebagian tugas di VM3/VM4 dipindahkan ke VM2 yang lebih kosong.
 
+## Penutup
+Hasil pengujian menunjukkan bahwa algoritma task scheduling berhasil mengeksekusi seluruh 20 tugas yang diberikan tanpa error, namun distribusi beban kerja antar VM masih belum optimal. Dengan makespan sebesar 25.128 detik, sistem mampu menyelesaikan seluruh task dalam waktu yang relatif cepat, meskipun nilai ini berpotensi diturunkan lebih jauh jika pemanfaatan VM lebih seimbang.
+
+Walaupun throughput mencapai 0.7959 tugas/detik dan resource utilization berada di 67.49%, distribusi beban kerja lebih banyak terpusat pada VM3 dan VM4 yang menangani 75% task, sementara VM2 hanya menjalankan dua task. Ketidakseimbangan ini juga tercermin dari Imbalance Degree sebesar 1.5322, menunjukkan adanya konsentrasi beban yang cukup tinggi pada dua VM yang sama. Dampaknya, antrean eksekusi pada VM3 dan VM4 menjadi panjang, tercermin dari Total Wait Time yang mencapai 66.3394 detik.
+
+Data pada eda_results.csv memperlihatkan pola antrean yang jelas: VM3 dan VM4 sering harus menunggu eksekusi task sebelumnya selesai, sementara VM2 sering berada dalam kondisi idle. Kondisi ini berkontribusi langsung pada membesarnya waktu tunggu dan meningkatnya finish time untuk beberapa task. Dengan redistribusi tugas ke VM2 yang lebih kosong, makespan dan metrik lain berpotensi membaik secara signifikan.
+
+Secara keseluruhan, algoritma sudah berfungsi dengan stabil dan mampu menyelesaikan seluruh task, namun masih membutuhkan peningkatan pada aspek load balancing, terutama dalam pemilihan VM agar antrian dapat diminimalkan dan utilisasi sumber daya meningkat. Pembaruan strategi penjadwalan yang lebih sadar beban (load-aware scheduling) dapat menjadi langkah berikutnya untuk meningkatkan performa sistem secara keseluruhan.
+
