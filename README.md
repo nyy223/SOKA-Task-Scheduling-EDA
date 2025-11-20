@@ -28,6 +28,106 @@ Mensimulasikan 4 VM heterogen dengan jumlah CPU berbeda:
 **2. Scheduler Python (EDA)**
 Mengimplementasikan algoritma EDA untuk menentukan penjadwalan optimal dan mengirimkan hasilnya ke VM untuk dieksekusi.
 
+## Algoritma EDA
+Algoritma ini dirancang untuk mencari solusi optimal dalam memetakan setiap task ke VM yang berbeda-beda kapasitas CPU-nya, sehingga menghasilkan **makespan** sekecil mungkin dengan **distribusi beban yang seimbang**.
+
+### 1. Fungsi Biaya — *Estimated Makespan*
+Fungsi biaya (`calculate_estimated_makespan`) digunakan untuk menghitung waktu eksekusi total (makespan) dari suatu solusi penjadwalan. Makespan dihitung sebagai **waktu eksekusi tertinggi** dari seluruh VM.
+
+```bash
+def calculate_estimated_makespan(solution: Dict[int, str], tasks_dict: Dict[int, Task], vms_dict: Dict[str, VM]) -> float:
+    vm_loads = {vm.name: 0.0 for vm in vms_dict.values()}
+    
+    for task_id, vm_name in solution.items():
+        task = tasks_dict[task_id]
+        vm = vms_dict[vm_name]
+        
+        # Estimasi waktu eksekusi: beban / jumlah core
+        estimated_time = task.cpu_load / vm.cpu_cores
+        vm_loads[vm_name] += estimated_time
+        
+    return max(vm_loads.values()) if vm_loads else 0.0
+```
+
+### 2. Inisialisasi Solusi Awal — Greedy Best-Fit
+EDA membutuhkan solusi awal yang baik agar iterasi lebih stabil. Maka digunakan pendekatan Greedy, yaitu:
+1. Urutkan task berdasarkan beban CPU terbesar.
+2. Tempatkan task pada VM yang menyebabkan waktu selesai paling kecil.
+
+```bash
+def initialize_greedy(tasks, vms):
+    vm_finish_times = {vm.name: 0.0 for vm in vms}
+    initial_solution = {}
+    
+    # Sort task berdasarkan cpu_load terbesar → terkecil
+    sorted_tasks = sorted(tasks, key=lambda t: t.cpu_load, reverse=True)
+    
+    for task in sorted_tasks:
+        best_vm = None
+        min_finish = float('inf')
+        
+        for vm in vms:
+            est = task.cpu_load / vm.cpu_cores
+            new_finish = vm_finish_times[vm.name] + est
+            
+            if new_finish < min_finish:
+                min_finish = new_finish
+                best_vm = vm.name
+        
+        initial_solution[task.id] = best_vm
+        vm_finish_times[best_vm] = min_finish
+        
+    return initial_solution
+```
+
+### 3. Model Probabilitas Awal (Weighted by CPU Capacity)
+EDA tidak mengacak penugasan task, tetapi membuat model probabilitas untuk setiap task. Probabilitas awal setiap VM dihitung berdasarkan total core
+```bash
+total_cores = sum(vm.cpu_cores for vm in vms)
+
+for task in tasks:
+    probability_model[task.id] = {
+        vm.name: vm.cpu_cores / total_cores
+        for vm in vms
+    }
+```
+Akibatnya, VM dengan CPU lebih besar memiliki peluang lebih besar untuk dipilih.
+
+### 4. Proses EDA (Sampling → Evaluation → Learning)
+EDA berjalan dalam beberapa iterasi. Setiap iterasi terdiri dari:
+
+**A. Sampling Populasi Solusi**
+
+EDA menghasilkan beberapa solusi baru menggunakan model probabilitas. Untuk setiap task, dipilih VM berdasarkan probabilitas.
+```bash
+for task in tasks:
+    vm_choices = list(probability_model[task.id].keys())
+    vm_probs = list(probability_model[task.id].values())
+    chosen_vm = random.choices(vm_choices, weights=vm_probs, k=1)[0]
+    new_solution[task.id] = chosen_vm
+```
+
+**B. Evaluasi Solusi & Pemilihan Elite**
+
+Setiap solusi dihitung cost (makespan-nya), lalu hanya elite (solusi terbaik) yang dipertahankan.
+```bash
+evaluated_population.sort(key=lambda x: x[0])
+elite_solutions = [sol for cost, sol in evaluated_population[:elite_size]]
+```
+
+**C. Pembaruan Model Probabilitas**
+
+Model probabilitas secara bertahap “belajar” untuk menugaskan task ke VM yang lebih optimal.
+* EDA menghitung frekuensi pemilihan VM.
+* VM dengan core besar diberikan bonus probability (capacity bias).
+* Probabilitas dinormalisasi kembali.
+```bash
+capacity_bias = vms_dict[vm_name].cpu_cores / total_cores * (elite_size / 5)
+
+new_prob = (freq + capacity_bias + 1e-6) / (elite_size + capacity_bias)
+probability_model[task.id][vm_name] = new_prob
+```
+
 ## Installation
 
 **1. Clone Repository**
